@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.HomeFragment"
+    >
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+ >
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cd_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="20dp"
+        android:elevation="20dp"
+        android:padding="20dp"
+        android:layout_margin="15dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            >
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_lawyer_ani"
+                android:layout_width="180dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/lawyer_animation" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="15dp"
+                android:padding="12dp"
+                >
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Book Your Service Now"
+                android:maxLines="2"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:layout_marginBottom="5dp"
+                />
+
+
+                <Button
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Book Now"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OR"
+                    android:maxLines="2"
+                   android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:textAlignment="center"
+                    android:textSize="15sp"
+                    />
+
+                <Button
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Post Job"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_getServices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#F5F5F5"
+        android:elevation="10dp"
+        app:layout_constraintTop_toBottomOf="@id/cd_heading"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="Get Service"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:id="@+id/txt_getServices"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/black"
+
+            />
+
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="10dp"
+            android:id="@+id/circularContainer_advocate"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintTop_toBottomOf="@id/txt_getServices"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/circularContainer_arbitrators"
+            android:src="@drawable/advocate_icon"
+            android:foreground="?attr/selectableItemBackground"
+
+            />
+
+
+        <TextView
+            android:id="@+id/txt_advocate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Advocate"
+            app:layout_constraintStart_toStartOf="@id/circularContainer_advocate"
+            app:layout_constraintTop_toBottomOf="@id/circularContainer_advocate"
+            app:layout_constraintEnd_toEndOf="@id/circularContainer_advocate"
+            />
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="10dp"
+            android:id="@+id/circularContainer_arbitrators"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintTop_toBottomOf="@id/txt_getServices"
+            app:layout_constraintStart_toEndOf="@id/circularContainer_advocate"
+            app:layout_constraintEnd_toStartOf="@id/circularContainer_mediators"
+            android:src="@drawable/arbitrators"
+            />
+
+
+        <TextView
+            android:id="@+id/txt_arbitrators"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Arbitrators"
+            app:layout_constraintStart_toStartOf="@id/circularContainer_arbitrators"
+            app:layout_constraintEnd_toEndOf="@id/circularContainer_arbitrators"
+            app:layout_constraintTop_toBottomOf="@id/circularContainer_arbitrators"
+            />
+
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="10dp"
+            android:id="@+id/circularContainer_mediators"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintTop_toBottomOf="@id/txt_getServices"
+            app:layout_constraintStart_toEndOf="@id/circularContainer_arbitrators"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:src="@drawable/mediators_icon"
+            />
+
+
+
+        <TextView
+            android:id="@+id/txt_mediators"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mediators"
+            app:layout_constraintEnd_toEndOf="@id/circularContainer_mediators"
+            app:layout_constraintStart_toStartOf="@id/circularContainer_mediators"
+            app:layout_constraintTop_toBottomOf="@id/circularContainer_mediators" />
+
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="30dp"
+            android:id="@+id/circularContainer_document_writer"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintTop_toBottomOf="@id/circularContainer_advocate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/circularContainer_notaries"
+            android:src="@drawable/document_writer_icon"
+            />
+
+
+
+
+
+        <TextView
+            android:id="@+id/txt_document_writer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Document Writer"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="@id/circularContainer_document_writer"
+            app:layout_constraintEnd_toEndOf="@id/circularContainer_document_writer"
+            app:layout_constraintTop_toBottomOf="@id/circularContainer_document_writer"
+            />
+
+
+
+
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_marginTop="30dp"
+            android:id="@+id/circularContainer_notaries"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintTop_toBottomOf="@id/circularContainer_advocate"
+            app:layout_constraintStart_toEndOf="@id/circularContainer_document_writer"
+            app:layout_constraintEnd_toEndOf="parent"
+android:src="@drawable/notaries_icon"
+            />
+
+
+        <TextView
+            android:id="@+id/txt_notaries"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Notaries"
+            app:layout_constraintStart_toStartOf="@id/circularContainer_notaries"
+            app:layout_constraintEnd_toEndOf="@id/circularContainer_notaries"
+            app:layout_constraintTop_toBottomOf="@id/circularContainer_notaries"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+    <!--    <ImageView-->
+<!--        android:id="@+id/btn_next"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/baseline_navigate_next_24"-->
+<!--        app:layout_constraintStart_toEndOf="@id/viewPager"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/cl_getServices"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/circular_indicator"-->
+<!--        />-->
+
+<!--    <androidx.viewpager2.widget.ViewPager2-->
+<!--       android:layout_marginTop="60dp"-->
+<!--        android:layout_marginHorizontal="35dp"-->
+<!--        android:layout_marginBottom="5dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="250dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/cl_getServices"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/circular_indicator"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:id="@+id/viewPager"-->
+<!--        />-->
+
+
+<!--    <ImageView-->
+<!--        android:id="@+id/btn_before"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/ic_navigate_before"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/cl_getServices"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/viewPager"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/circular_indicator"-->
+<!--        />-->
+<!--    <me.relex.circleindicator.CircleIndicator3-->
+<!--        android:id="@+id/circular_indicator"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/viewPager"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:background="#D8D8D8"-->
+<!--        android:layout_margin="10dp"-->
+<!--        android:outlineSpotShadowColor="@color/black"-->
+<!--        android:outlineAmbientShadowColor="@color/black"-->
+<!--        />-->
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

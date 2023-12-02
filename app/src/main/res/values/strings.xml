@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">LegalBridge</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_chatbot">ChatBot</string>
+    <string name="title_account">Account</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="already_register_login">Already Register? <font color="#2196F3">Login</font></string>
+    <string name="new_user_register">New User? <font color="#2196F3">Register</font></string>
+    <string name="forget_password_click_here">forget Password? <font color="#FF0000">Click Here</font></string>
+</resources>
