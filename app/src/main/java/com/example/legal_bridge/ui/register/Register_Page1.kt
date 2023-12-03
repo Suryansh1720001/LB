@@ -8,6 +8,7 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,8 @@ class Register_Page1 : Fragment() {
     private lateinit var sharedViewModel: SharedPreference
     private var _binding: FragmentRegisterPage1Binding? = null
     private val binding get() = _binding!!
+    private val cities = arrayOf("City1", "sity2", "pea3", "sdfty4", "dsty5") // Replace with your city names array
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,6 +66,20 @@ class Register_Page1 : Fragment() {
             activity?.setResult(Activity.RESULT_CANCELED)
 //            activity?.finish()
         }
+        binding?.autoCompleteTextView?.setText("hello")
+
+
+
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cities)
+        binding?.autoCompleteTextView?.setAdapter(adapter)
+
+        binding?.autoCompleteTextView?.threshold = 1 // Set minimum number of characters before suggestions start
+        binding?.autoCompleteTextView?.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding?.autoCompleteTextView?.showDropDown()
+            }
+        }
+
 
         return binding.root
     }

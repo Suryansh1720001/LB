@@ -1,11 +1,16 @@
 package com.example.legal_bridge.ui.ForgetPassword
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.legal_bridge.R
 import com.example.legal_bridge.api.RetrofitClient
 import com.example.legal_bridge.databinding.ActivityForgetPasswordBinding
 import com.example.legal_bridge.model.ErrorResponse.ErrorResponse
@@ -25,14 +30,12 @@ class ForgetPassword : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityForgetPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding?.emailContainer?.helperText = null
 
 
         binding?.btnSubmit?.setOnClickListener {
             binding?.emailContainer?.helperText = validEmail()
             val validEmail = binding?.emailContainer?.helperText == null
-
 
 
 
@@ -63,7 +66,7 @@ class ForgetPassword : AppCompatActivity() {
                             Log.d("USER", "${response.message()}")
                             Log.d("USER", "${response.errorBody().toString()}")
                             Log.d("USER", "${response.errorBody()?.string()}")
-                            showForgetPasswordDialog(response.body()?.message, true)
+                            showSucessDialog(response.body()?.message)
 
                         } else {
                             // Registration failed, handle accordingly
@@ -80,10 +83,10 @@ class ForgetPassword : AppCompatActivity() {
                                     Log.d("USER", "Original Error Response: ${response.errorBody()?.string()}")
                                 }
                                 Log.d("USER", errorMessage)
-                                showForgetPasswordDialog(errorMessage,false)
+                                showErrorDialog(errorMessage)
                             } catch (e: Exception) {
                                 Log.e("USER", "Exception while parsing error response: ${e.message}")
-                                showForgetPasswordDialog("Error occurred while processing the request",false)
+                                showErrorDialog("Error occurred while processing the request")
                             }
 
 
@@ -94,7 +97,7 @@ class ForgetPassword : AppCompatActivity() {
                     override fun onFailure(call: Call<forgetPasswordResponse>, t: Throwable) {
                         Log.d("USER", "${t.message}")
                         binding?.progressBar?.visibility = View.GONE
-                        showForgetPasswordDialog(t.message,false)
+                        showErrorDialog(t.message)
 
                     }
                 })
@@ -115,22 +118,74 @@ class ForgetPassword : AppCompatActivity() {
     }
 
 
-    fun showForgetPasswordDialog(mess : String?,value:Boolean?) {
+//    fun showForgetPasswordDialog(mess : String?,value:Boolean?) {
+//        binding?.progressBar?.visibility = View.GONE
+//        val builder = AlertDialog.Builder(this@ForgetPassword)
+//        val message = mess
+//
+//
+//
+//        builder.apply {
+//            setMessage(message)
+//            setPositiveButton("OK") { dialog, _ ->
+//                dialog.dismiss()
+////                if(value!!){
+////                    finish()
+////                }
+//            }
+//        }.create().show()
+//    }
+
+    @SuppressLint("MissingInflatedId")
+    private fun showErrorDialog(mess:String?) {
         binding?.progressBar?.visibility = View.GONE
-        val builder = AlertDialog.Builder(this@ForgetPassword)
-        val message = mess
+        // Inflate the layout containing the CardView
+        val errorCardView = LayoutInflater.from(this).inflate(R.layout.error_dialog, null)
+
+        // Create a dialog or use another view to display the error card
+        val builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setView(errorCardView)
 
 
+        val dialog = builder.create()
 
-        builder.apply {
-            setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-                if(value!!){
-                    finish()
-                }
-            }
-        }.create().show()
+        errorCardView.findViewById<TextView>(R.id.error_mess).text = mess
+        // Show the dialog
+        dialog.show()
+
+        // Set actions for the 'OK' button
+        val okButton = errorCardView.findViewById<Button>(R.id.btn_ok)
+        okButton.setOnClickListener { dialog.dismiss()
+        }
     }
+
+
+    private fun showSucessDialog(mess:String?) {
+        binding?.progressBar?.visibility = View.GONE
+        // Inflate the layout containing the CardView
+        val errorCardView = LayoutInflater.from(this).inflate(R.layout.sucess_dialog, null)
+
+        // Create a dialog or use another view to display the error card
+        val builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setView(errorCardView)
+
+
+        val dialog = builder.create()
+
+        errorCardView.findViewById<TextView>(R.id.sucess_mess).text = mess
+        // Show the dialog
+        dialog.show()
+
+        // Set actions for the 'OK' button
+        val okButton = errorCardView.findViewById<Button>(R.id.btn_ok)
+        okButton.setOnClickListener { dialog.dismiss()
+            finish()
+        }
+    }
+
+
+
 
 }

@@ -1,15 +1,20 @@
 package com.example.legal_bridge.ui.login
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.legal_bridge.MainActivity
+import com.example.legal_bridge.R
 import com.example.legal_bridge.api.RetrofitClient
 import com.example.legal_bridge.databinding.ActivityLoginBinding
 import com.example.legal_bridge.helper.SharedPreference
@@ -27,11 +32,11 @@ import retrofit2.Response
 
 class LoginActivity : AppCompatActivity() {
     companion object {
-        const val REQUEST_REGISTER = 123 // Or any unique request code
+        const val REQUEST_REGISTER = 123
     }
     private lateinit var sharedViewModel: SharedPreference
-
     private lateinit var binding: ActivityLoginBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -54,11 +59,9 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-
         binding?.tvNewUser?.setOnClickListener {
 //            startActivity(Intent(this@LoginActivity,Register_Activity::class.java))
 //            finish()
-
             sharedViewModel.setDefaultValues()
 
             startActivityForResult(Intent(this, Register_Activity::class.java), REQUEST_REGISTER)
@@ -68,8 +71,9 @@ class LoginActivity : AppCompatActivity() {
 
         binding?.tvForgetPassword?.setOnClickListener {
             startActivity(Intent(this@LoginActivity, ForgetPassword::class.java))
-
         }
+
+
 
 
 
@@ -107,13 +111,10 @@ class LoginActivity : AppCompatActivity() {
 
             binding?.passwordContainer?.helperText = null
             binding?.emailContainer?.helperText = null
-
-
-
-//            val p = "$2b$10$b/vuS/QnS4xeNWpESfJyAeb6.e.m7S4ELAOmVeQPjGNUc/Lh382sO"
+//          val p = "$2b$10$b/vuS/QnS4xeNWpESfJyAeb6.e.m7S4ELAOmVeQPjGNUc/Lh382sO"
 
             val LoginUserResquest = LoginUserResquest(
-               email= binding?.emailEditText?.text.toString(),
+                email= binding?.emailEditText?.text.toString(),
                 password = password
             )
 
@@ -134,9 +135,9 @@ class LoginActivity : AppCompatActivity() {
 
                         Log.d("TOKEN","${response.body()?.token}")
 //                        Toast.makeText(this@LoginActivity, "${response.body()?.token}",Toast.LENGTH_LONG ).show()
-                        // Proceed to the next screen or perform other actions
+//                        Proceed to the next screen or perform other actions
 
-                        // save the user value on the phone
+//                         save the user value on the phone
                         sharedViewModel.email = response.body()?.email
                         sharedViewModel.fullName = response.body()?.name
                         sharedViewModel.image = response.body()?.pic
@@ -158,10 +159,9 @@ class LoginActivity : AppCompatActivity() {
                         finish()
 
                     } else {
-
                         binding?.progressBar?.visibility = View.GONE
 
-                        // Registration failed, handle accordingly
+                  //      Registration failed, handle accordingly
                         Log.d("USER","${response.body()}")
                         Log.d("USER","${response.code()}")
 //                        Log.d("USER","${response.message()}")
@@ -175,34 +175,32 @@ class LoginActivity : AppCompatActivity() {
                             val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
                             val errorMessage = errorResponse?.error?.message ?: "Unknown error occurred"
                             if (errorMessage == "Unknown error occurred") {
-                                // Log the actual JSON response to debug further
+//                                Log the actual JSON response to debug further
                                 Log.d("USER", "Original Error Response: ${response.errorBody()?.string()}")
                             }
                             Log.d("USER", errorMessage)
-                            showErrorInDialog(errorMessage)
+//                            showErrorInDialog(errorMessage)
+                            showErrorCard(errorMessage)
+
 
                         } catch (e: Exception) {
                             Log.e("USER", "Exception while parsing error response: ${e.message}")
-                            showErrorInDialog("Error occurred while processing the request")
+//                            showErrorInDialog("Error occurred while processing the request")
+                            showErrorCard("Error occurred while processing the request")
 //                        showForgetPasswordDialog("Error occurred while processing the request",false)
                         }
-
-
                     }
                 }
 
                 override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+
                     Log.d("USER","${t.message}")
-                    showErrorInDialog("Error occurred while processing the request")
+//                    showErrorInDialog()
+                    showErrorCard("Error occurred while processing the request")
                     binding?.progressBar?.visibility = View.GONE
                 }
             })
         }
-
-
-
-
-
         }
 
 
@@ -217,25 +215,52 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-
     private fun isPasswordValid(password: String): Boolean {
         val passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$"
         return password.matches(passwordRegex.toRegex())
     }
 
 
-    fun showErrorInDialog(mess: String) {
-        binding?.progressBar?.visibility =
-            View.GONE
-        val builder = AlertDialog.Builder(this@LoginActivity)
-        val message =mess
-        builder.apply {
-            setMessage(message)
-            setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
+//    fun showErrorInDialog(mess: String) {
+//        binding?.progressBar?.visibility =
+//            View.GONE
+//        val builder = AlertDialog.Builder(this@LoginActivity)
+//        val message =mess
+//        builder.apply {
+//            setMessage(message)
+//            setPositiveButton("OK") { dialog, _ ->
+//                dialog.dismiss()
+//
+//            }
+//        }.create().show()
+//    }
 
-            }
-        }.create().show()
+
+    @SuppressLint("MissingInflatedId")
+    private fun showErrorCard(mess:String) {
+        binding?.progressBar?.visibility = View.GONE
+//         Inflate the layout containing the CardView
+        val errorCardView = LayoutInflater.from(this).inflate(R.layout.error_dialog, null)
+
+
+
+
+//        Create a dialog or use another view to display the error card
+        val builder = AlertDialog.Builder(this)
+        builder.setCancelable(false)
+        builder.setView(errorCardView)
+
+
+        val dialog = builder.create()
+
+        errorCardView.findViewById<TextView>(R.id.error_mess).text = mess
+//        Show the dialog
+        dialog.show()
+
+//        Set actions for the 'OK' button
+        val okButton = errorCardView.findViewById<Button>(R.id.btn_ok)
+        okButton.setOnClickListener { dialog.dismiss() }
     }
+
 
 }

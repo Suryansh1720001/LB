@@ -164,7 +164,7 @@
             val request = Request.Builder()
 //                .url("https://api.openai.com/v1/completions")
                 .url("https://api.openai.com/v1/completions")
-                .header("Authorization", "Bearer "+APIConstantValue.CHAT_GPT_API)
+//                .header("Authorization", "Bearer "+APIConstantValue.CHAT_GPT_API)
                 .post(body)
                 .build()
 

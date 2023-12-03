@@ -70,7 +70,7 @@ class AccountDetailsFragment : Fragment() {
             // You can display a placeholder image or show an error message here
         }
 
-        binding?.flUserProfile?.setOnClickListener {
+        binding?.cvUserProfile?.setOnClickListener {
             startActivity(Intent(requireContext(), UserAccountDetails::class.java))
 
         }
