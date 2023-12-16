@@ -1,219 +1,79 @@
 package com.example.legal_bridge.ui.register
 
-import android.app.DatePickerDialog
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.findNavController
-import com.example.legal_bridge.helper.SpinnerConstants
 import com.example.legal_bridge.R
+import com.example.legal_bridge.api.RetrofitClient
 import com.example.legal_bridge.databinding.FragmentRegisterPage2Binding
 import com.example.legal_bridge.helper.SharedPreference
+import com.example.legal_bridge.model.ErrorResponse.ErrorResponse
+import com.example.legal_bridge.model.PhoneVerification.OTPRequest.otpRequest
+import com.example.legal_bridge.model.PhoneVerification.OTPRequest.otpResponse
+import com.example.legal_bridge.model.PhoneVerification.OTPVerification.OTPverifyRequest
+import com.example.legal_bridge.model.PhoneVerification.OTPVerification.otpVerifyResponse
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
-
-import java.text.SimpleDateFormat
-import java.util.*
+import com.google.gson.Gson
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Register_Page2 : Fragment() {
 
-//    companion object {
-//        private val IMAGE_CHOOSE = 1000;
-//        private val PERMISSION_CODE = 1001;
-//        private val REQUEST_CODE = 1002  // Use any unique value
-//    }
-
-
     private lateinit var sharedViewModel: SharedPreference
-
-
     private var _binding: FragmentRegisterPage2Binding? = null
     private val binding get() = _binding!!
+    private var timerJob: Job? = null
 
+
+    private val resendDelayMillis = 60_000 // 60 seconds
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentRegisterPage2Binding.inflate(inflater, container, false)
-//        sharedViewModel = ViewModelProvider(this).get(SharedPreference::class.java)
         sharedViewModel = SharedPreference(requireContext())
 
-        binding?.AddressLine1?.helperText = null
-        binding?.AddressLine2?.helperText = null
-        binding?.pinCodeContainer?.helperText = null
+        binding?.phoneContainer?.helperText = null
+        binding?.resendTimer?.visibility= View.GONE
+        binding?.llOtp?.visibility= View.GONE
+        binding?.tvEnterOTP?.visibility= View.GONE
+
 
         initial()
-
-
-
-
-
-
-        binding?.fldob?.setOnClickListener {
-            showDatePickerDialog()
-        }
-
-
-        // for nation
-        val Nationadapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            SpinnerConstants.nationality
-        )
-        Nationadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding?.spinnerNationality?.adapter = Nationadapter
-        binding?.spinnerNationality?.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-
-                    val selectedNation = SpinnerConstants.nationality[position]
-                    sharedViewModel.nationality = position
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    // Do nothing here
-                }
-            }
-
-
-        // for States ;
-        val Stateadapter = ArrayAdapter(
-            requireContext(),
-            android.R.layout.simple_spinner_item,
-            SpinnerConstants.indianStates
-        )
-        Stateadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding?.spinnerState?.adapter = Stateadapter
-        binding?.spinnerState?.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    // Handle item selection if needed
-                    val selectedState = SpinnerConstants.indianStates[position]
-                    sharedViewModel.state = position
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    // Do nothing here
-                }
-            }
-
-
-        // city
-        val Cityadapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, SpinnerConstants.city)
-        Cityadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding?.spinnerCity?.adapter = Cityadapter
-        binding?.spinnerCity?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                // Handle item selection if needed
-                val selectedCity = SpinnerConstants.city[position]
-                sharedViewModel.city = position
-
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                // Do nothing here
-            }
-        }
-
-
-        //language
-//        not required
-//        val Languageadapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, Constants.language)
-//        Languageadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        binding?.spinnerLanguage?.adapter = Languageadapter
-//        binding?.spinnerLanguage?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?,
-//                view: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                // Handle item selection if needed
-//                val selectedLanguage = Constants.language[position]
-//                sharedViewModel.language = position
-//
-//            }
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                // Do nothing here
-//            }
-//        }
-
-
-        // gender
-        val Genderadapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, SpinnerConstants.gender)
-        Genderadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding?.spinnerGender?.adapter = Genderadapter
-        binding?.spinnerGender?.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    // Handle item selection if needed
-                    val selectedGender = SpinnerConstants.gender[position]
-                    sharedViewModel.gender = position
-
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    // Do nothing here
-                }
-            }
-
-
-//        binding?.tvPickImage?.setOnClickListener {
-//            ImagePicker.with(this)
-//                .compress(1024)         //Final image size will be less than 1 MB(Optional)
-//                .maxResultSize(1080, 1080)  //Final image resolution will be less than 1080 x 1080(Optional)
-//                .createIntent { intent ->
-//                    startForProfileImageResult.launch(intent)
-//                }
-//        }
-
-// companion object
-
+        setupOtpInputs()
+        handleClipboard()
 
         binding?.btnNext2?.setOnClickListener {
-            sharedViewModel.addressLine1 = binding?.addressLine1EditText?.text.toString()
-            sharedViewModel.addressLine2 = binding?.addressLine2EditText?.text?.toString()
-            sharedViewModel.pincode = binding?.pinCodeEditText?.text?.toString()
-
-
-            if(binding?.tvDob?.text !=null && sharedViewModel.addressLine1 !=null && sharedViewModel.pincode !=null && sharedViewModel.gender!=0 && sharedViewModel.city !=0 &&
-                sharedViewModel.state!=0 && sharedViewModel.nationality!=0 ){
-                findNavController().navigate(R.id.action_register_Page2_to_register_Page3)
+            if(binding?.btnNext2?.text == "NEXT" || binding?.btnNext2?.text == "Next"){
+                binding?.progressBar?.visibility = View.VISIBLE
+                verifyOTP()
             }else{
-                Snackbar.make(binding?.root!!, "Please enter valid details", Snackbar.LENGTH_LONG)
-                    .show()
+                sendOTP()
             }
+        }
 
+        binding?.resendTimer?.setOnClickListener {
+            if(binding?.resendTimer?.text == "Resend OTP"){
+                sendOTP()
+            }
         }
 
         // Inflate the layout for this fragment
@@ -221,129 +81,211 @@ class Register_Page2 : Fragment() {
     }
 
 
+    private fun verifyOTP() {
+        val enteredOTP = OTPverifyRequest(
+            phoneNumber = "+91"+ binding?.phoneEditText?.text?.toString()!!,
+            userOTP = binding?.etDigit1?.text?.toString() + binding?.etDigit2?.text?.toString() + binding?.etDigit3?.text?.toString() + binding?.etDigit4?.text?.toString() + binding?.etDigit5?.text?.toString() + binding?.etDigit6?.text?.toString()
+        )
+        val apiService = RetrofitClient.getApiService()
+        val call = apiService.OTPVerify(enteredOTP)
 
+        call.enqueue(object : Callback<otpVerifyResponse> {
+            override fun onResponse(call: Call<otpVerifyResponse>, response: Response<otpVerifyResponse>) {
+                if (response.isSuccessful) {
+                    Log.d("USER", "Message: ${response.body()?.message}")
+                    sharedViewModel.phone = binding?.phoneEditText?.text.toString()
+                    navigateToNextFragment() // Call the function to navigate to the next fragment
+                } else {
+                    // Registration failed, handle accordingly
+                    Log.d("USER", "${response.code()}")
+                    Log.d("USER", "${response.body()}")
+//                        Log.d("USER", "${response.errorBody().toString()}")
+                    try {
+                        val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+                        val errorMessage = errorResponse?.error?.message ?: "Unknown error occurred"
+                        if (errorMessage == "Unknown error occurred") {
+//                                Log the actual JSON response to debug further
+                            Log.d("USER", "Original Error Response: ${response.errorBody()?.string()}")
+                        }
+                        Log.d("USER", errorMessage)
+                        showErrorCard(errorMessage)
 
-//    private val startForProfileImageResult =
-//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-//            val resultCode = result.resultCode
-//            val data = result.data
-//
-//            if (resultCode == Activity.RESULT_OK) {
-//                //Image Uri will not be null for RESULT_OK
-//                val fileUri = data?.data!!
-//
-//               selectedImageUri = fileUri
-//               binding?.ivUserProfile?.setImageURI(fileUri)
-//                selectedImagePath = getImagePath(selectedImageUri)
-//
-//                Toast.makeText(context, "$selectedImagePath", Toast.LENGTH_LONG).show()
-//                sharedViewModel.image = selectedImagePath
-//            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-//                Toast.makeText(context, ImagePicker.getError(data), Toast.LENGTH_SHORT).show()
-//            } else {
-//                Toast.makeText(context, "Task Cancelled", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-
-
-    private fun initial() {
-        Toast.makeText(context, "${sharedViewModel.image}", Toast.LENGTH_LONG).show()
-//      val dob = convertDateFormattoOriginal(sharedViewModel.tvDob!!)
-//        if(convertDateFormattoOriginal(sharedViewModel.tvDob!!)!=null){
-//            binding?.tvDob?.text = dob
-//        }
-
-        if (sharedViewModel.tvDob != null) {
-            val dob = convertDateFormattoOriginal(sharedViewModel.tvDob!!)
-            if (dob != null) {
-                binding?.tvDob?.text = dob
+                    } catch (e: Exception) {
+                        Log.e("USER", "Exception while parsing error response: ${e.message}")
+                        showErrorCard("Error occurred while processing the request")
+                    }
+                }
+                binding?.progressBar?.visibility = View.GONE
             }
-        }
 
-        binding?.pinCodeEditText?.setText(sharedViewModel.pincode)
-        binding?.addressLine1EditText?.setText(sharedViewModel.addressLine1)
-        binding?.addressLine2EditText?.setText(sharedViewModel.addressLine2)
+            override fun onFailure(call: Call<otpVerifyResponse>, t: Throwable) {
+                // Handle network failures
+                Log.e("USER", "Failure: ${t.message}")
+                showErrorCard("Failure: ${t.message}")
+//                showErrorInDialog("Network error occurred")
+                binding?.progressBar?.visibility = View.GONE
+            }
+        })
+    }
 
-
-// Inside the initial() function
-        val savedGenderPosition = sharedViewModel.gender
-        Toast.makeText(requireContext(),"$savedGenderPosition",Toast.LENGTH_LONG).show()
-//        binding?.spinnerGender?.setSelection(savedGenderPosition!!)
-
-//        val savedGenderPosition = sharedViewModel.gender
-        val genderAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, SpinnerConstants.gender)
-        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding?.spinnerGender?.adapter = genderAdapter
-
-// Set selection after the adapter is set
-        binding?.spinnerGender?.setSelection(2)
-        binding?.spinnerCity?.setSelection(2)
-
-
-
-//        if(sharedViewModel.image !=null){
-//            binding?.tvPickImage?.text = "Image Selected"
-//            binding?.tvPickImage?.setBackgroundResource(R.drawable.bg_rect_selected)
-//        }
-
-        // spinner reamainng
-
-
-
+    private fun navigateToNextFragment() {
+        // Before navigating to the next fragment, check and cancel the timer job if it's running
+        timerJob?.cancel()
+        // Navigate to the next fragment
+        findNavController().navigate(R.id.action_register_Page2_to_register_Page3)
     }
 
 
-    private fun convertDateFormattoOriginal(inputDate: String?): String? {
-        if (inputDate.isNullOrEmpty()) {
-            // Handle the case when the date string is null or empty
-             return null
+    private fun sendOTP() {
+        binding?.phoneContainer?.helperText = validPhone()
+
+        val isValidEmail = binding?.phoneContainer?.helperText == null
+
+        if (!isValidEmail) {
+            Snackbar.make(binding?.root!!, "Please enter valid phone Number", Snackbar.LENGTH_LONG)
+                .show()
+        } else {
+            binding?.btnNext2?.isEnabled = false
+            binding?.progressBar?.visibility = View.VISIBLE
+            binding?.phoneContainer?.helperText = null
+
+            val apiService = RetrofitClient.getApiService()
+//            val call = apiService.checkEmailExists(CheckEmailRequest(email = email.toString()))
+            val call = apiService.sendOTP(otpRequest(phoneNumber ="+91" + binding?.phoneEditText?.text.toString()))
+
+            call.enqueue(object : Callback<otpResponse> {
+                override fun onResponse(call: Call<otpResponse>, response: Response<otpResponse>) {
+                    if (response.isSuccessful) {
+                        Log.d("USER", "Message: ${response.body()?.message}")
+                        binding?.btnNext2?.text = "Next"
+                        binding?.tvEnterOTP?.visibility = View.VISIBLE
+                        binding?.llOtp?.visibility = View.VISIBLE
+                        binding?.resendTimer?.visibility = View.VISIBLE
+
+                        binding?.btnNext2?.isEnabled = true
+
+//                        val bool : Boolean? = binding?.etDigit1?.text?.isNotEmpty()!! && binding?.etDigit2?.text?.isNotEmpty()!! && binding?.etDigit3?.text?.isNotEmpty()!! && binding?.etDigit4?.text?.isNotEmpty()!!
+//                                && binding?.etDigit5?.text?.isNotEmpty()!! && binding?.etDigit6?.text?.isNotEmpty()!!
+
+                        timerJob = lifecycleScope.launch {
+                            var remainingTimeMillis = resendDelayMillis
+
+                            while (remainingTimeMillis > 0) {
+                                // Update the TextView with the remaining time
+                                val seconds = remainingTimeMillis / 1000
+                                binding?.resendTimer?.text = "Resend in: $seconds seconds"
+
+                                // Delay for 1 second
+                                delay(1_000)
+
+                                // Decrement the remaining time by 1 second
+                                remainingTimeMillis -= 1_000
+                            }
+                            binding?.resendTimer?.text = "Resend OTP"
+                        }
+
+
+                            // Enable the resend OTP button after the delay
+
+                    } else {
+                        // Registration failed, handle accordingly
+                        Log.d("USER", "${response.code()}")
+                        Log.d("USER", "${response.body()}")
+                        Log.d("USER", "${response.errorBody()?.string()}")
+
+//                        Log.d("USER", "${response.errorBody().toString()}")
+
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+                            val errorMessage = errorResponse?.error?.message ?: "Unknown error occurred"
+                            if (errorMessage == "Unknown error occurred") {
+//                                Log the actual JSON response to debug further
+                                Log.d("USER", "Original Error Response: ${response.errorBody()?.string()}")
+                            }
+                            Log.d("USER", errorMessage)
+                            showErrorCard(errorMessage)
+
+
+                        } catch (e: Exception) {
+                            Log.e("USER", "Exception while parsing error response: ${e.message}")
+                            showErrorCard("Error occurred while processing the request")
+                        }
+                    }
+                    binding?.progressBar?.visibility = View.GONE
+                }
+
+                override fun onFailure(call: Call<otpResponse>, t: Throwable) {
+                    // Handle network failures
+                    Log.e("USER", "Failure: ${t.message}")
+//                    showErrorInDialog("Network error occurred")
+                    binding?.progressBar?.visibility = View.GONE
+                }
+            })
+
 
         }
-        val inputFormat = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val date = inputFormat.parse(inputDate)
-        return outputFormat.format(date)
     }
 
 
-    private fun showDatePickerDialog() {
-        val calendar = Calendar.getInstance()
-
-        val datePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, year, month, dayOfMonth ->
-                // Update the calendar with the selected date
-                calendar.set(year, month, dayOfMonth)
-
-                // Format the date as "dd/MM/yyyy" for the TextView
-                val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-                val formattedDate = sdf.format(calendar.time)
-                binding?.tvDob?.text = formattedDate
-
-                // Convert the date to the desired format for sharedViewModel.tvDob
-                val dateFormat = SimpleDateFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'Z (zzzz)", Locale.getDefault())
-                val formattedForViewModel = dateFormat.format(calendar.time)
-
-                Toast.makeText(requireContext(), formattedForViewModel, Toast.LENGTH_LONG).show()
-
-                // Save the date in sharedViewModel.tvDob
-                sharedViewModel.tvDob = formattedForViewModel
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+    private fun setupOtpInputs() {
+        val editTextList = listOf(
+            binding.etDigit1, binding.etDigit2, binding.etDigit3,
+            binding.etDigit4, binding.etDigit5, binding.etDigit6
         )
 
-        datePickerDialog.show()
+        for ((index, editText) in editTextList.withIndex()) {
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    if (s?.length == 1) {
+                        if (index < editTextList.size - 1) {
+                            editTextList[index + 1].requestFocus()
+                        }
+                    }
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+
+            })
+
+            editText.setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.action == KeyEvent.ACTION_DOWN) {
+                    if (index > 0) {
+                        editTextList[index - 1].requestFocus()
+                        editTextList[index - 1].setText(editText.text.toString()) // Update existing value
+                    }
+                }
+                false
+            }
+        }
     }
 
+    private fun handleClipboard() {
+        binding.root.setOnClickListener {
+            val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+            if (clipboard?.hasPrimaryClip() == true) {
+                val clipData = clipboard.primaryClip
+                if (clipData?.itemCount == 1) {
+                    val pastedText = clipData.getItemAt(0).text.toString().trim()
+                    if (pastedText.length == 6) {
+                        for (i in pastedText.indices) {
+                            binding.root.postDelayed({
+                                binding.etDigit1.setText(pastedText[0].toString())
+                                binding.etDigit2.setText(pastedText[1].toString())
+                                binding.etDigit3.setText(pastedText[2].toString())
+                                binding.etDigit4.setText(pastedText[3].toString())
+                                binding.etDigit5.setText(pastedText[4].toString())
+                                binding.etDigit6.setText(pastedText[5].toString())
+                            }, i * 100L)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-
-
-    fun onStateInputLayoutClick(view: View) {
-        // Open the dropdown
-        val stateSpinner = view.findViewById<Spinner>(R.id.spinner_state)
-        stateSpinner.performClick()
+    private fun initial() {
+        binding?.phoneEditText?.setText(sharedViewModel.phone)
     }
 
 
@@ -351,6 +293,55 @@ class Register_Page2 : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun phoneFocusListener()
+    {
+        binding?.phoneEditText?.setOnFocusChangeListener { _, focused ->
+            if(!focused)
+            {
+                binding?.phoneContainer?.helperText = validPhone()
+            }
+        }
+    }
+
+    private fun validPhone(): String?
+    {
+        val phoneText = binding?.phoneEditText?.text.toString()
+        if(!phoneText.matches(".*[0-9].*".toRegex()))
+        {
+            return "Must be all Digits"
+        }
+        if(phoneText.length != 10)
+        {
+            return "Must be 10 Digits"
+        }
+        return null
+    }
+
+    private fun showErrorCard(mess:String) {
+        binding?.progressBar?.visibility = View.GONE
+//         Inflate the layout containing the CardView
+        val errorCardView = LayoutInflater.from(requireContext()).inflate(R.layout.error_dialog, null)
+
+
+//        Create a dialog or use another view to display the error card
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setCancelable(false)
+        builder.setView(errorCardView)
+
+
+        val dialog = builder.create()
+
+        errorCardView.findViewById<TextView>(R.id.error_mess).text = mess
+//        Show the dialog
+        dialog.show()
+
+//        Set actions for the 'OK' button
+        val okButton = errorCardView.findViewById<Button>(R.id.btn_ok)
+        okButton.setOnClickListener { dialog.dismiss() }
+    }
+
+
 
 
 }

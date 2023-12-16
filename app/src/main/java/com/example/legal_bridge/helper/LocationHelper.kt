@@ -3,6 +3,7 @@ package com.example.legal_bridge.helper
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import android.text.Editable
 import java.io.IOException
 
 class LocationHelper(private val context: Context) {

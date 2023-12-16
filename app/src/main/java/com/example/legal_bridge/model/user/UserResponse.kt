@@ -1,6 +1,5 @@
 package com.example.legal_bridge.model.user
 
-
 data class UserResponse(
     val _id: String,
     val role: String,
@@ -12,7 +11,7 @@ data class UserResponse(
     val gender: String,
     val password: String,
     val pic: String,
-    val location: Location,
+    val address : Address,
     val token: String,
     val message : String,
 )

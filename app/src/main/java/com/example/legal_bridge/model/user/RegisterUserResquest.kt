@@ -1,5 +1,6 @@
 package com.example.legal_bridge.model.user
 
+
 data class RegisterUserResquest(
     val name: String,
     val email: String,
@@ -9,5 +10,5 @@ data class RegisterUserResquest(
     val password: String,
     val gender: String,
     val pic: String,
-    val location: Location,
+    val address: Address,
 )

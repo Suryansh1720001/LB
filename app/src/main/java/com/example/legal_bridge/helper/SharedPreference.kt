@@ -29,25 +29,25 @@ class SharedPreference(context: Context) {
         get() = prefs.getString("tvDob", null)
         set(value) = prefs.edit { putString("tvDob", value) }
 
-    var nationality: Int?
-        get() = prefs.getInt("Nationality", 0)
-        set(value) = prefs.edit { putInt("Nationality", value ?: 0) }
+    var nationality: String?
+        get() = prefs.getString("Nationality", null)
+        set(value) = prefs.edit { putString("Nationality", value ) }
 
-    var state: Int?
-        get() = prefs.getInt("State", 0) // Provide a default value suitable for your use case
-        set(value) = prefs.edit { putInt("State", value ?: 0) } // Use the Elvis operator to handle null values
+    var state: String?
+        get() = prefs.getString("State", null) // Provide a default value suitable for your use case
+        set(value) = prefs.edit { putString("State", value) } // Use the Elvis operator to handle null values
 
-    var city: Int?
-        get() = prefs.getInt("City", 0) // Provide a default value suitable for your use case
-        set(value) = prefs.edit { putInt("City", value ?: 0) } // Use the Elvis operator to handle null values
+    var city: String?
+        get() = prefs.getString("City", null) // Provide a default value suitable for your use case
+        set(value) = prefs.edit { putString("City", value ) } // Use the Elvis operator to handle null values
 
-    var language: Int?
-        get() = prefs.getInt("Language", 0) // Provide a default value suitable for your use case
-        set(value) = prefs.edit { putInt("Language", value ?: 0) } // Use the Elvis operator to handle null values
+//    var language: String?
+//        get() = prefs.getString("Language", null) // Provide a default value suitable for your use case
+//        set(value) = prefs.edit { putString("Language", value) } // Use the Elvis operator to handle null values
 
-    var gender: Int?
-        get() = prefs.getInt("Gender", 0) // Provide a default value suitable for your use case
-        set(value) = prefs.edit { putInt("Gender", value ?: 0) } // Use the Elvis operator to handle null values
+    var gender: String?
+        get() = prefs.getString("Gender", null) // Provide a default value suitable for your use case
+        set(value) = prefs.edit { putString("Gender", value) } // Use the Elvis operator to handle null values
 
     var image: String?
         get() = prefs.getString("image", null)
@@ -57,13 +57,10 @@ class SharedPreference(context: Context) {
         get() = prefs.getString("pincode", null)
         set(value) = prefs.edit { putString("pincode", value) }
 
-    var addressLine1: String?
-        get() = prefs.getString("addressLine1", null)
-        set(value) = prefs.edit { putString("addressLine1", value) }
+    var addressLine: String?
+        get() = prefs.getString("addressLine", null)
+        set(value) = prefs.edit { putString("addressLine", value) }
 
-    var addressLine2: String?
-        get() = prefs.getString("addressLine2", null)
-        set(value) = prefs.edit { putString("addressLine2", value) }
 
 
     var isAlreadyLoggedIn: Boolean
@@ -85,7 +82,18 @@ class SharedPreference(context: Context) {
 
 
 
+    var _id: String?
+        get() = prefs.getString("_id", null)
+        set(value) = prefs.edit { putString("_id", value) }
 
+
+    var token: String?
+        get() = prefs.getString("token", null)
+        set(value) = prefs.edit { putString("token", value) }
+
+    var isUserDetailsUpdated: Boolean
+        get() = prefs.getBoolean("isUserDetailsUpdated", false)
+        set(value) = prefs.edit { putBoolean("isUserDetailsUpdated", value) }
 
     fun setDefaultValues() {
         // Set default values for each preference
@@ -109,7 +117,7 @@ class SharedPreference(context: Context) {
         // Set default values for preferences in the third fragment
         clearPreference("pass")
         clearPreference("confirmpass")
-
+        clearPreference("token")
         // Add more preferences as needed
     }
 

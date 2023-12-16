@@ -2,13 +2,18 @@ package com.example.legal_bridge.ui.login
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -19,6 +24,7 @@ import com.example.legal_bridge.api.RetrofitClient
 import com.example.legal_bridge.databinding.ActivityLoginBinding
 import com.example.legal_bridge.helper.SharedPreference
 import com.example.legal_bridge.helper.SpinnerConstants
+import com.example.legal_bridge.helper.utils
 import com.example.legal_bridge.model.ErrorResponse.ErrorResponse
 import com.example.legal_bridge.model.user.LoginUserResquest
 import com.example.legal_bridge.model.user.UserResponse
@@ -26,6 +32,11 @@ import com.example.legal_bridge.ui.ForgetPassword.ForgetPassword
 import com.example.legal_bridge.ui.register.Register_Activity
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,12 +47,16 @@ class LoginActivity : AppCompatActivity() {
     }
     private lateinit var sharedViewModel: SharedPreference
     private lateinit var binding: ActivityLoginBinding
+    private var overlay: View? = null // Declare the overlay as a class variable
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         sharedViewModel = SharedPreference(this)
+
+//        checkInternetConnection(this)
 
         binding?.emailContainer?.helperText = null
         binding?.passwordContainer?.helperText = null
@@ -52,31 +67,22 @@ class LoginActivity : AppCompatActivity() {
                 finish()
         }
 
-
         binding?.btnLogin?.setOnClickListener {
             Login()
         }
-
 
 
         binding?.tvNewUser?.setOnClickListener {
 //            startActivity(Intent(this@LoginActivity,Register_Activity::class.java))
 //            finish()
             sharedViewModel.setDefaultValues()
-
             startActivityForResult(Intent(this, Register_Activity::class.java), REQUEST_REGISTER)
-
-
         }
+
 
         binding?.tvForgetPassword?.setOnClickListener {
             startActivity(Intent(this@LoginActivity, ForgetPassword::class.java))
         }
-
-
-
-
-
 
     }
 
@@ -108,6 +114,8 @@ class LoginActivity : AppCompatActivity() {
                 "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
         }else{
             binding?.progressBar?.visibility = View.VISIBLE
+            utils().createTransparentOverlay(this@LoginActivity) // Call to create the transparent overlay
+
 
             binding?.passwordContainer?.helperText = null
             binding?.emailContainer?.helperText = null
@@ -125,6 +133,8 @@ class LoginActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                     if (response.isSuccessful) {
                         binding?.progressBar?.visibility = View.GONE
+                        utils().removeTransparentOverlay(this@LoginActivity) // Call to remove the transparent overlay
+
                         // Registration successful, handle accordingly
                         Log.d("USER","${response.body()}")
                         Log.d("USER","${response.code()}")
@@ -143,7 +153,13 @@ class LoginActivity : AppCompatActivity() {
                         sharedViewModel.image = response.body()?.pic
                         sharedViewModel.phone = response.body()?.phone
                         sharedViewModel.tvDob = response.body()?.dob
-                        sharedViewModel.gender = SpinnerConstants.getGenderIndex(response.body()?.gender!!)
+                        sharedViewModel.gender = response.body()?.gender
+                        sharedViewModel.city = response.body()?.address?.city
+                        sharedViewModel.state = response.body()?.address?.state
+                        sharedViewModel.pincode = response.body()?.address?.pincode
+                        sharedViewModel._id = response?.body()?._id
+                        sharedViewModel.token = response?.body()?.token
+
 
 
                         Toast.makeText(this@LoginActivity, "${response.body()?.gender!!}",Toast.LENGTH_LONG ).show()
@@ -160,10 +176,13 @@ class LoginActivity : AppCompatActivity() {
 
                     } else {
                         binding?.progressBar?.visibility = View.GONE
+                        utils().removeTransparentOverlay(this@LoginActivity) // Call to remove the transparent overlay
 
-                  //      Registration failed, handle accordingly
+
+                        //      Registration failed, handle accordingly
                         Log.d("USER","${response.body()}")
                         Log.d("USER","${response.code()}")
+
 //                        Log.d("USER","${response.message()}")
 //                        Log.d("USER","${response.errorBody().toString()}")
 //                        Log.d("USER","${response.errorBody()?.string()}")
@@ -198,6 +217,8 @@ class LoginActivity : AppCompatActivity() {
 //                    showErrorInDialog()
                     showErrorCard("Error occurred while processing the request")
                     binding?.progressBar?.visibility = View.GONE
+                    utils().removeTransparentOverlay(this@LoginActivity) // Call to remove the transparent overlay
+
                 }
             })
         }
@@ -239,6 +260,8 @@ class LoginActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId")
     private fun showErrorCard(mess:String) {
         binding?.progressBar?.visibility = View.GONE
+        utils().removeTransparentOverlay(this@LoginActivity) // Call to remove the transparent overlay
+
 //         Inflate the layout containing the CardView
         val errorCardView = LayoutInflater.from(this).inflate(R.layout.error_dialog, null)
 
@@ -259,8 +282,63 @@ class LoginActivity : AppCompatActivity() {
 
 //        Set actions for the 'OK' button
         val okButton = errorCardView.findViewById<Button>(R.id.btn_ok)
-        okButton.setOnClickListener { dialog.dismiss() }
+        okButton.setOnClickListener { dialog.dismiss()
+            utils().removeTransparentOverlay(this@LoginActivity) // Call to remove the transparent overlay
+        }
     }
+
+
+
+
+    // Check Internet Connectivity
+    fun isInternetAvailable(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connectivityManager.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
+    // Show Dialog Box
+    fun showDialog(context: Context) {
+        val dialogBuilder = AlertDialog.Builder(context)
+        dialogBuilder.setMessage("No internet connection!")
+        dialogBuilder.setPositiveButton("Retry") { dialog, _ ->
+            dialog.dismiss()
+            checkInternetConnection(context)
+        }
+        val dialog = dialogBuilder.create()
+        dialog.show()
+    }
+
+
+
+    // Check Internet Connection
+
+    // Check Internet Connection
+    fun checkInternetConnection(context: Context) {
+        val progressDialog = ProgressDialog(context)
+        progressDialog.setMessage("Checking internet...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            // Simulating a delay for checking internet
+            delay(3000)
+
+            // Check connectivity
+            val isConnected = isInternetAvailable(context)
+
+            withContext(Dispatchers.Main) {
+                progressDialog.dismiss()
+
+                if (!isConnected) {
+                    showDialog(context) // Show dialog again if not connected
+                }
+            }
+        }
+    }
+
+
+
 
 
 }

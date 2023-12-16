@@ -3,7 +3,7 @@ package com.example.legal_bridge.helper
 
 object SpinnerConstants {
     val indianStates = arrayOf(
-        "Select State","Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh",
+       "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh",
         "Chhattisgarh", "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Goa", "Gujarat", "Haryana",
         "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Lakshadweep", "Madhya Pradesh", "Maharashtra",
         "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim",
@@ -12,7 +12,7 @@ object SpinnerConstants {
 
 
     val nationality = arrayOf(
-        "Select Country", "India", "Afghan", "Albanian", "Algerian", "Andorran", "Angolan", "Antiguans", "Argentinean",
+        "India", "Afghan", "Albanian", "Algerian", "Andorran", "Angolan", "Antiguans", "Argentinean",
         "Armenian", "Australian", "Austrian", "Azerbaijani", "Bahamian", "Bahraini", "Bangladeshi", "Barbadian",
         "Belarusian", "Belgian", "Belizean", "Beninese", "Bhutanese", "Bolivian", "Bosnian", "Brazilian",
         "British", "Bruneian", "Bulgarian", "Burkinabe", "Burmese", "Burundian", "Cambodian", "Cameroonian",
@@ -39,14 +39,14 @@ object SpinnerConstants {
     )
 
 
-    val gender = arrayListOf("Select gender","male", "female", "not specify")
+    val gender = arrayOf("male", "female", "not specify")
 
     fun getGenderIndex(genderToFind: String): Int {
         return gender.indexOf(genderToFind)
     }
 
-    val city = listOf(
-        "Select City", "Agartala", "Agra", "Ahmedabad", "Ajmer", "Akola", "Aligarh", "Allahabad", "Alwar", "Ambattur",
+    val city = arrayOf(
+         "Agartala", "Agra", "Ahmedabad", "Ajmer", "Akola", "Aligarh", "Allahabad", "Alwar", "Ambattur",
         "Amravati", "Amritsar", "Asansol", "Aurangabad", "Bareilly", "Belgaum", "Bellary", "Bhavnagar", "Bhilai",
         "Bhilwara", "Bhiwandi", "Bhopal", "Bhubaneswar", "Bikaner", "Bokaro", "Chandigarh", "Chandrapur", "Chennai",
         "Coimbatore", "Cuttack", "Dehradun", "Delhi", "Dhanbad", "Durgapur", "Erode", "Faridabad", "Gaya", "Ghaziabad",
@@ -59,6 +59,12 @@ object SpinnerConstants {
         "Srinagar", "Surat", "Thane", "Thiruvananthapuram", "Thrissur", "Tiruchirappalli", "Tirunelveli", "Tiruppur",
         "Udaipur", "Ujjain", "Ulhasnagar", "Vadodara", "Varanasi", "Vasai-Virar", "Vijayawada", "Visakhapatnam",
         "Warangal"
+    )
+
+  val citiesByState = mapOf(
+        "State1" to listOf("City1_State1", "City2_State1", "City3_State1"),
+        "State2" to listOf("City1_State2", "City2_State2", "City3_State2"),
+        // Add more states and their corresponding cities
     )
 
 

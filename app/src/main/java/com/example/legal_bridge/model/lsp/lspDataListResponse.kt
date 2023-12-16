@@ -1,0 +1,38 @@
+package com.example.legal_bridge.model.lsp
+
+data class lspDataListResponse(
+//    val _id: String,
+//    val role: String,
+//    val typeofLSP: String,
+//    val courts: List<String>,
+//    val name: String,
+//    val pic: String,
+//    val experience: Int,
+//    val experienceField: List<String>,
+//    val rating: Int,
+//    val education: List<String>,
+
+    val _id: String,
+    val name: String,
+    val email: String,
+    val phone: String,
+    val dob: String,
+    val password: String,
+    val gender: String,
+    val pic: String,
+    val barID: String,
+    val role: String,
+    val typeOfLSP: String,
+    val experience: Int,
+    val expertiseField: List<String>,
+    val courts: List<String>,
+    val rating: Double,
+    val isActive: Boolean,
+    val bio: String,
+    val languages: List<String>,
+    val location: Location,
+    val education: List<Education>,
+    val createdAt: String,
+    val updatedAt: String,
+    val __v: Int
+    )

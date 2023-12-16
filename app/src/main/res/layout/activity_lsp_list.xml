@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+  >
+
+    
+    <HorizontalScrollView
+        android:id="@+id/cl_getServices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#F5F5F5"
+        android:elevation="10dp"
+        android:padding="1dp"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circularContainer_advocate"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="10dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/advocate_icon"
+                app:layout_constraintEnd_toStartOf="@id/circularContainer_arbitrators"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txt_advocate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Advocate"
+                app:layout_constraintEnd_toEndOf="@id/circularContainer_advocate"
+                app:layout_constraintStart_toStartOf="@id/circularContainer_advocate"
+                app:layout_constraintTop_toBottomOf="@id/circularContainer_advocate" />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circularContainer_arbitrators"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/arbitrators"
+                app:layout_constraintEnd_toStartOf="@id/circularContainer_mediators"
+                app:layout_constraintStart_toEndOf="@id/circularContainer_advocate"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txt_arbitrators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Arbitrators"
+                app:layout_constraintEnd_toEndOf="@id/circularContainer_arbitrators"
+                app:layout_constraintStart_toStartOf="@id/circularContainer_arbitrators"
+                app:layout_constraintTop_toBottomOf="@id/circularContainer_arbitrators" />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circularContainer_mediators"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/mediators_icon"
+                app:layout_constraintEnd_toStartOf="@id/circularContainer_document_writer"
+                app:layout_constraintStart_toEndOf="@id/circularContainer_arbitrators"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txt_mediators"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mediators"
+                app:layout_constraintEnd_toEndOf="@id/circularContainer_mediators"
+                app:layout_constraintStart_toStartOf="@id/circularContainer_mediators"
+                app:layout_constraintTop_toBottomOf="@id/circularContainer_mediators" />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circularContainer_document_writer"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/document_writer_icon"
+                app:layout_constraintEnd_toStartOf="@id/circularContainer_notaries"
+                app:layout_constraintStart_toEndOf="@+id/circularContainer_mediators"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txt_document_writer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Document Writer"
+                android:textAlignment="center"
+                app:layout_constraintEnd_toEndOf="@id/circularContainer_document_writer"
+                app:layout_constraintStart_toStartOf="@id/circularContainer_document_writer"
+                app:layout_constraintTop_toBottomOf="@id/circularContainer_document_writer" />
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/circularContainer_notaries"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/notaries_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/circularContainer_document_writer"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <TextView
+                android:id="@+id/txt_notaries"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Notaries"
+                app:layout_constraintEnd_toEndOf="@id/circularContainer_notaries"
+                app:layout_constraintStart_toStartOf="@id/circularContainer_notaries"
+                app:layout_constraintTop_toBottomOf="@id/circularContainer_notaries"
+
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </HorizontalScrollView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_lsp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_getServices"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="5dp"
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

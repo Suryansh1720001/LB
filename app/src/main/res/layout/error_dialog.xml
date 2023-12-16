@@ -40,6 +40,7 @@
         android:gravity="center"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:layout_marginHorizontal="20dp"
         />
 
 

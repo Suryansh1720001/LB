@@ -15,9 +15,9 @@
     import androidx.recyclerview.widget.LinearLayoutManager
     import androidx.recyclerview.widget.RecyclerView
     import com.example.legal_bridge.databinding.FragmentChatbotBinding
-    import com.example.legal_bridge.helper.APIConstantValue
     import com.google.android.material.snackbar.Snackbar
     import okhttp3.Callback
+    import okhttp3.FormBody
     import okhttp3.MediaType.Companion.toMediaType
     import okhttp3.OkHttpClient
     import okhttp3.Request
@@ -35,6 +35,8 @@
         // onDestroyView.
         private val binding get() = _binding!!
 
+        private val openAIUrl = "https://api.openai.com/v1/engines/davinci/completions"
+        private val apiKey = "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"
 
         private lateinit var recyclerView: RecyclerView
         private lateinit var welcomeImageView: ImageView
@@ -151,19 +153,34 @@
             // okhttp
             messageList.add(Message("Typing... ", Message.SENT_BY_BOT))
 
-            val jsonBody = JSONObject().apply {
+//            val jsonBody = JSONObject().apply {
+//
+//                put("model", "text-davinci-003")
+//
+//                put("prompt", question)
+//                put("max_tokens", 7)
+//                put("temperature", 0.7)
+//            }
 
-                put("model", "text-davinci-003")
+            val jsonBody = JSONObject().apply {
+                put("model", "gpt-3.5-turbo")
                 put("prompt", question)
-                put("max_tokens", 7)
+                put("max_tokens", 70)
                 put("temperature", 0.7)
             }
+
             //        val body = RequestBody.create(jsonBody.toString(), JSON)
             val body = RequestBody.create(JSON, jsonBody.toString())
 
+//            val requestBody = FormBody.Builder()
+//                .add("prompt", question)
+//                .add("max_tokens", "150")
+//                .build()
+
             val request = Request.Builder()
 //                .url("https://api.openai.com/v1/completions")
-                .url("https://api.openai.com/v1/completions")
+                .url(openAIUrl)
+                .addHeader("Authorization", "Bearer $apiKey")
 //                .header("Authorization", "Bearer "+APIConstantValue.CHAT_GPT_API)
                 .post(body)
                 .build()
@@ -186,6 +203,7 @@
                             e.printStackTrace()
                         }
                     } else {
+                        Log.d("BODY","RESPONSE UNSUCCESS")
                         Log.d("BODY","${response.body?.string()}")
                         addResponse("Failed to load response due to ${response.body?.toString()}")
                     }

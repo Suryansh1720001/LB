@@ -57,36 +57,13 @@
                 android:textSize="15sp"
                 android:layout_marginTop="10dp"
                 android:textAlignment="center"
+                android:foreground="?attr/selectableItemBackground"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@id/tv_register"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 />
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_user"
-                android:id="@+id/FullNameContainer"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_marginHorizontal="20dp"
-                app:helperText="Required"
-                app:helperTextTextColor="@android:color/holo_red_dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_alreadyLogin">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/FullNameEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:lines="1"
-                    android:hint="Full Name"/>
-
-
-            </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -101,7 +78,7 @@
                 android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/FullNameContainer">
+                app:layout_constraintTop_toBottomOf="@id/tv_alreadyLogin">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailEditText"
@@ -118,64 +95,8 @@
 
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_phone"
-                android:id="@+id/phoneContainer"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_marginHorizontal="20dp"
-                app:helperText="Required"
-                app:helperTextTextColor="@android:color/holo_red_dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:counterEnabled="true"
-                app:counterMaxLength="10"
-                android:layout_marginTop="30dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/emailContainer">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/phoneEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:lines="1"
-                    android:inputType="number"
-                    android:hint="Phone Number"/>
 
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                app:startIconDrawable="@drawable/ic_phone"
-                android:id="@+id/autoCompleteTextViewc"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_marginHorizontal="20dp"
-                app:helperText="Required"
-                app:helperTextTextColor="@android:color/holo_red_dark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:counterEnabled="true"
-                app:counterMaxLength="10"
-                android:layout_marginTop="30dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/phoneContainer">
-
-
-                <AutoCompleteTextView
-                    app:layout_constraintTop_toBottomOf="@id/phoneContainer"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:id="@+id/autoCompleteTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="15dp"
-                    android:hint="Enter City Name" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
 
 <!--            <AutoCompleteTextView-->
@@ -208,6 +129,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="20dp"
         />
+
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progressBar"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:SpinKit_Color="@color/brown"
+        app:SpinKit_Style="FadingCircle"
+        />
+
 
 
 

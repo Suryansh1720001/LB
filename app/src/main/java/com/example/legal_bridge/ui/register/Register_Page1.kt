@@ -4,28 +4,41 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.TextView
 import androidx.activity.addCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.legal_bridge.MainActivity
 import com.example.legal_bridge.R
+import com.example.legal_bridge.api.RetrofitClient
 import com.example.legal_bridge.databinding.FragmentRegisterPage1Binding
 import com.example.legal_bridge.helper.SharedPreference
+import com.example.legal_bridge.model.ErrorResponse.ErrorResponse
+import com.example.legal_bridge.model.emailcheck.CheckEmailRequest
+import com.example.legal_bridge.model.emailcheck.CheckEmailResponse
+import com.example.legal_bridge.model.user.UserResponse
 import com.example.legal_bridge.ui.login.LoginActivity
 import com.google.android.material.snackbar.Snackbar
-
-
+import com.google.gson.Gson
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class Register_Page1 : Fragment() {
 
     private lateinit var sharedViewModel: SharedPreference
     private var _binding: FragmentRegisterPage1Binding? = null
     private val binding get() = _binding!!
-    private val cities = arrayOf("City1", "sity2", "pea3", "sdfty4", "dsty5") // Replace with your city names array
 
 
     override fun onCreateView(
@@ -34,50 +47,28 @@ class Register_Page1 : Fragment() {
     ): View {
 
         _binding = FragmentRegisterPage1Binding.inflate(inflater, container, false)
-//         sharedViewModel = ViewModelProvider(this).get(SharedPreference::class.java)
 
         sharedViewModel = SharedPreference(requireContext())
 
 
         intial()
-       binding?.emailContainer?.helperText = null
-        binding?.FullNameContainer?.helperText = null
-        binding?.phoneContainer?.helperText = null
-
+        binding?.emailContainer?.helperText = null
         binding?.btnNext1?.setOnClickListener { submitForm() }
 
 
 
 
         binding?.tvAlreadyLogin?.setOnClickListener {
-//            val navController = findNavController()
             // Replace YourLoginDestination with the ID of your login destination
             startActivity(Intent(activity, LoginActivity::class.java))
-//
 //            // Clear back stack up to the register_Page1 fragment
-//            navController.popBackStack(R.id.register_Page1, false)
             activity?.setResult(Activity.RESULT_CANCELED)
-//            activity?.finish()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             // Handle the back button press
             startActivity(Intent(activity, LoginActivity::class.java))
             activity?.setResult(Activity.RESULT_CANCELED)
-//            activity?.finish()
-        }
-        binding?.autoCompleteTextView?.setText("hello")
-
-
-
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, cities)
-        binding?.autoCompleteTextView?.setAdapter(adapter)
-
-        binding?.autoCompleteTextView?.threshold = 1 // Set minimum number of characters before suggestions start
-        binding?.autoCompleteTextView?.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                binding?.autoCompleteTextView?.showDropDown()
-            }
         }
 
 
@@ -88,25 +79,13 @@ class Register_Page1 : Fragment() {
 
     private fun intial() {
         emailFocusListener()
-        phoneFocusListener()
-        fullNameFocusListener()
-
 
         binding?.emailContainer?.helperText = validEmail()
-        binding?.FullNameContainer?.helperText = validFullName()
-        binding?.phoneContainer?.helperText = validPhone()
 
         val validEmail = binding?.emailContainer?.helperText == null
-        val validFullName = binding?.FullNameContainer?.helperText == null
-        val validPhone = binding?.phoneContainer?.helperText == null
 
-
-        if (!(validEmail && validPhone && validFullName)) {
-
+        if (!(validEmail)) {
             binding?.emailEditText?.setText(sharedViewModel.email)
-            binding?.FullNameEditText?.setText(sharedViewModel.fullName)
-            binding?.phoneEditText?.setText(sharedViewModel.phone)
-
         }
     }
 
@@ -116,48 +95,72 @@ class Register_Page1 : Fragment() {
         _binding = null
     }
 
-    private fun fullNameFocusListener() {
-        binding?.FullNameEditText?.setOnFocusChangeListener { _, focused ->
-            if(!focused)
-            {
-                binding?.FullNameContainer?.helperText = validFullName()
-            }
-        }
-    }
+    private fun submitForm() {
 
-    private fun validFullName(): String? {
-
-        if(TextUtils.isEmpty(binding?.FullNameEditText?.getText().toString())){
-            return "Must be valid Name"
-        }
-
-        return null
-
-    }
-
-    private fun submitForm()
-    {
         binding?.emailContainer?.helperText = validEmail()
-        binding?.FullNameContainer?.helperText = validFullName()
-        binding?.phoneContainer?.helperText = validPhone()
 
-        val validEmail = binding?.emailContainer?.helperText == null
-        val validFullName = binding?.FullNameContainer?.helperText == null
-        val validPhone = binding?.phoneContainer?.helperText == null
+        val isValidEmail = binding?.emailContainer?.helperText == null
 
-        if (!(validEmail && validPhone && validFullName)) {
-            Snackbar.make(binding?.root!!, "Please enter valid details", Snackbar.LENGTH_LONG)
+        if (!isValidEmail) {
+            Snackbar.make(binding?.root!!, "Please enter valid email id", Snackbar.LENGTH_LONG)
                 .show()
-        }
-        else {
-           sharedViewModel.email = binding?.emailEditText?.text.toString()
-            sharedViewModel.fullName = binding?.FullNameEditText?.text.toString()
-            sharedViewModel.phone = binding?.phoneEditText?.text.toString()
+        } else {
+            binding?.progressBar?.visibility = View.VISIBLE
 
-//            startActivity(Intent(context, Register_Page2::class.java))
-            findNavController().navigate(R.id.action_register_Page1_to_register_Page2)
+            val email = binding?.emailEditText?.text?.toString()
+
+            binding?.emailContainer?.helperText = null
+
+            val apiService = RetrofitClient.getApiService()
+//            val call = apiService.checkEmailExists(CheckEmailRequest(email = email.toString()))
+            val call = apiService.checkEmailExists(CheckEmailRequest(email = email))
+
+            call.enqueue(object : Callback<CheckEmailResponse> {
+                override fun onResponse(call: Call<CheckEmailResponse>, response: Response<CheckEmailResponse>) {
+                    if (response.isSuccessful) {
+
+                            Log.d("USER", "Message: ${response.body()?.message}")
+
+                        sharedViewModel.email = email
+
+//                   findNavController().navigate(R.id.action_register_Page1_to_register_Page2)
+                        findNavController().navigate(R.id.action_register_Page1_to_register_Page2)
+                    } else {
+                        // Registration failed, handle accordingly
+                        Log.d("USER", "${response.code()}")
+                        Log.d("USER", "${response.body()}")
+//                        Log.d("USER", "${response.errorBody().toString()}")
+
+                        try {
+                            val errorResponse = Gson().fromJson(response.errorBody()?.string(), ErrorResponse::class.java)
+                            val errorMessage = errorResponse?.error?.message ?: "Unknown error occurred"
+                            if (errorMessage == "Unknown error occurred") {
+//                                Log the actual JSON response to debug further
+                                Log.d("USER", "Original Error Response: ${response.errorBody()?.string()}")
+                            }
+                            Log.d("USER", errorMessage)
+                            showErrorCard(errorMessage)
+
+
+                        } catch (e: Exception) {
+                            Log.e("USER", "Exception while parsing error response: ${e.message}")
+                            showErrorCard("Error occurred while processing the request")
+                        }
+                    }
+                    binding?.progressBar?.visibility = View.GONE
+                }
+
+                override fun onFailure(call: Call<CheckEmailResponse>, t: Throwable) {
+                    // Handle network failures
+                    Log.e("USER", "Failure: ${t.message}")
+                    showErrorCard("Network error occurred")
+                    binding?.progressBar?.visibility = View.GONE
+                }
+            })
         }
     }
+
+
 
 
     private fun emailFocusListener()
@@ -181,27 +184,32 @@ class Register_Page1 : Fragment() {
     }
 
 
-    private fun phoneFocusListener()
-    {
-        binding?.phoneEditText?.setOnFocusChangeListener { _, focused ->
-            if(!focused)
-            {
-                binding?.phoneContainer?.helperText = validPhone()
-            }
-        }
+    private fun showErrorCard(mess:String) {
+        binding?.progressBar?.visibility = View.GONE
+//         Inflate the layout containing the CardView
+        val errorCardView = LayoutInflater.from(requireContext()).inflate(R.layout.error_dialog, null)
+
+
+//        Create a dialog or use another view to display the error card
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setCancelable(false)
+        builder.setView(errorCardView)
+
+
+        val dialog = builder.create()
+
+        errorCardView.findViewById<TextView>(R.id.error_mess).text = mess
+//        Show the dialog
+        dialog.show()
+
+//        Set actions for the 'OK' button
+        val okButton = errorCardView.findViewById<Button>(R.id.btn_ok)
+        okButton.setOnClickListener { dialog.dismiss() }
     }
 
-    private fun validPhone(): String?
-    {
-        val phoneText = binding?.phoneEditText?.text.toString()
-        if(!phoneText.matches(".*[0-9].*".toRegex()))
-        {
-            return "Must be all Digits"
-        }
-        if(phoneText.length != 10)
-        {
-            return "Must be 10 Digits"
-        }
-        return null
-    }
+
+
+
 }
+
+

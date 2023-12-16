@@ -6,258 +6,156 @@
     android:layout_height="match_parent"
     tools:context=".ui.register.Register_Page2">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/btn_next2"
+
+
+    <ImageView
+        android:id="@+id/iv_register_image_1"
+        android:layout_width="fill_parent"
+        android:layout_height="230dp"
+        android:src="@drawable/register_image_1"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+    <com.google.android.material.textfield.TextInputLayout
+        app:startIconDrawable="@drawable/ic_phone"
+        android:id="@+id/phoneContainer"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        android:layout_marginHorizontal="20dp"
+        app:helperText="Required"
+        app:helperTextTextColor="@android:color/holo_red_dark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:counterEnabled="true"
+        app:counterMaxLength="10"
+        android:layout_marginTop="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_register_image_1">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/phoneEditText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:lines="1"
+            android:inputType="number"
+            android:hint="Phone Number"/>
 
 
-
-            <TextView
-                android:id="@+id/dob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:text="Date of Birth"
-                android:textColor="@color/black"
-                android:textSize="22sp"
-                app:layout_constraintEnd_toStartOf="@+id/fldob"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+    </com.google.android.material.textfield.TextInputLayout>
 
 
-            <FrameLayout
-                android:id="@+id/fldob"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/rectangle"
-                android:padding="2dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/dob"
-                app:layout_constraintTop_toTopOf="parent">
+    <TextView
+        android:id="@+id/tv_enterOTP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter OTP"
+        app:layout_constraintStart_toStartOf="@id/phoneContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintBottom_toTopOf="@id/ll_otp"
+        android:gravity="center"
+        android:layout_marginBottom="5dp"
+        android:visibility="visible"
+        />
 
-                <!-- TextView comes first -->
-                <TextView
-                    android:id="@+id/tv_dob"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="40dp"
-                    android:textSize="20sp" />
+    <LinearLayout
 
-                <!-- ImageView comes second -->
-                <ImageView
+        android:visibility="visible"
+        android:id="@+id/ll_otp"
+        app:layout_constraintTop_toBottomOf="@id/phoneContainer"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center"
-                    android:src="@drawable/ic_calender" />
+        <EditText
+            android:id="@+id/etDigit1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:background="@drawable/bg_rect"
+            android:layout_margin="5dp"/>
 
-            </FrameLayout>
+        <EditText
+            android:id="@+id/etDigit2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:background="@drawable/bg_rect"
+            android:layout_margin="5dp"/>
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/AddressLine1"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                app:helperText="Required: Enter Address Line 1"
-                app:helperTextTextColor="@android:color/holo_red_dark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fldob">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/addressLine1EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter Address Line 1"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/AddressLine2"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                app:helperText="Enter Address Line 2"
-                app:helperTextTextColor="@android:color/holo_red_dark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/AddressLine1">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/addressLine2EditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter Address Line 2"
-                    android:inputType="text" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+        <EditText
+            android:id="@+id/etDigit3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:background="@drawable/bg_rect"
+            android:layout_margin="5dp"/>
 
 
-            <LinearLayout
-                android:id="@+id/ll_spiiner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/AddressLine2">
+        <EditText
+            android:id="@+id/etDigit4"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:background="@drawable/bg_rect"
+            android:layout_margin="5dp"/>
+
+        <EditText
+            android:id="@+id/etDigit5"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:background="@drawable/bg_rect"
+            android:layout_margin="5dp"/>
+
+        <EditText
+            android:id="@+id/etDigit6"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:inputType="number"
+            android:maxLength="1"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:background="@drawable/bg_rect"
+            android:layout_margin="5dp"/>
+    </LinearLayout>
 
 
-                <TextView
-                    android:id="@+id/tv_city"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Select City : "
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spinner_state"
+    <TextView
+        android:id="@+id/resend_timer"
+        app:layout_constraintTop_toBottomOf="@id/ll_otp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Resend OTP in : 09:23 sec"
+        android:textSize="17sp"
+        android:textColor="#FF0000"
+        android:gravity="end"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        />
 
-                    />
-
-
-                <Spinner
-                    android:id="@+id/spinner_city"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="5dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_city" />
-
-
-
-
-                <TextView
-                    android:id="@+id/tv_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Select State : "
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spinner_nationality"
-
-                    />
-
-
-                <Spinner
-                    android:id="@+id/spinner_state"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="5dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_state" />
-
-
-                <TextView
-                    android:id="@+id/tv_Nationality"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Nationality : "
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/AddressLine2" />
-
-
-                <Spinner
-
-                    android:id="@+id/spinner_nationality"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="5dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_Nationality" />
-
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-
-                android:id="@+id/pinCodeContainer"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
-                app:helperText="Required: Enter your pincode"
-                app:helperTextTextColor="@android:color/holo_red_dark"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_spiiner">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/pinCodeEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Enter PinCode"
-                    android:inputType="number"
-                    android:maxLength="6" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_spiiner_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/pinCodeContainer">
-
-
-                <TextView
-                    android:id="@+id/tv_gender"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Gender : "
-                    android:textColor="@color/black"
-                    android:textSize="20sp" />
-
-                <Spinner
-                    android:id="@+id/spinner_gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="15dp"
-                    android:layout_marginTop="5dp" />
-
-
-            </LinearLayout>
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
 
     <Button
         android:id="@+id/btn_next2"
@@ -265,11 +163,27 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:layout_marginHorizontal="20sp"
-        android:text="Next"
+        android:text="Send OTP"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/progressBar"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:SpinKit_Color="@color/brown"
+        app:SpinKit_Style="FadingCircle"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

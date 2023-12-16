@@ -10,13 +10,23 @@
         android:name="com.example.legal_bridge.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_lsp"
+            app:destination="@id/navigation_lsp"
+            />
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.legal_bridge.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_lsp"
+        android:name="com.example.legal_bridge.ui.getLsp.lspFragment"
+        android:label="@string/lsp"
+        tools:layout="@layout/fragment_lsp" >
+        <action
+            android:id="@+id/action_navigation_lsp_to_navigation_home"
+            app:destination="@id/navigation_home"
+            popUpToInclusive="true"
+            />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_chatbot"

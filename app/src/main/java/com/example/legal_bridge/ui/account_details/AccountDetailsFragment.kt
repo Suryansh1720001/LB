@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.legal_bridge.R
 import com.example.legal_bridge.databinding.FragmentAccountDetailsBinding
 import com.example.legal_bridge.helper.SharedPreference
 import com.example.legal_bridge.ui.account_details.accountSections.EditUserDetails
@@ -40,12 +41,9 @@ class AccountDetailsFragment : Fragment() {
 
         sharedViewModel = SharedPreference(requireContext())
 
-        binding.flAppointment.setOnClickListener{
-            Toast.makeText(context, "THIS", Toast.LENGTH_LONG).show()
-        }
 
-        binding?.userName?.setText(sharedViewModel.fullName)
-        binding?.userEmail?.setText(sharedViewModel.email)
+        addDatatoField()
+
 
 
         binding?.flLogOut?.setOnClickListener {
@@ -55,20 +53,8 @@ class AccountDetailsFragment : Fragment() {
             startActivity(intent)
             requireActivity().finishAffinity();
         }
-        Toast.makeText(requireContext(),"${sharedViewModel.image}",Toast.LENGTH_LONG).show()
 
-        try {
-            val imageUrl = sharedViewModel.image?.replace("http://", "https://")
 
-            Picasso.get()
-                .load(imageUrl )
-                .into(binding?.userProfileImage)
-        } catch (e: Exception) {
-            // Handle exceptions related to image loading
-            Log.d("USER","${e.printStackTrace()}")
-            e.printStackTrace()
-            // You can display a placeholder image or show an error message here
-        }
 
         binding?.cvUserProfile?.setOnClickListener {
             startActivity(Intent(requireContext(), UserAccountDetails::class.java))
@@ -89,6 +75,42 @@ class AccountDetailsFragment : Fragment() {
 
 
         return root
+
+    }
+
+    private fun addDatatoField() {
+
+        binding?.userName?.setText(sharedViewModel.fullName)
+        binding?.userEmail?.setText(sharedViewModel.email)
+
+        try {
+            if(sharedViewModel.image!=null) {
+                val imageUrl = sharedViewModel.image?.replace("http://", "https://")
+
+                Picasso.get()
+                    .load(imageUrl)
+                    .into(binding?.userProfileImage)
+            }
+            else{
+                binding?.userProfileImage?.setImageResource(R.drawable.man_chatbot_image)
+            }
+        } catch (e: Exception) {
+            // Handle exceptions related to image loading
+            Log.d("USER","${e.printStackTrace()}")
+            e.printStackTrace()
+            // You can display a placeholder image or show an error message here
+        }
+
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        // Fetch data from shared view model and populate fields
+        if(sharedViewModel.isUserDetailsUpdated) {
+
+            addDatatoField()
+        }
 
     }
 

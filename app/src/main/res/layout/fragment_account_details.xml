@@ -41,7 +41,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="4"
-            android:background="@color/light_brown"
+            android:background="@color/more_light_brown"
             android:padding="10dp"
             >
 
